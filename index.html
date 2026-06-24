@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>BE BEaST</title>
+<title>Rutina</title>
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -306,6 +306,78 @@
   .hint b { color: var(--text); }
   @media (display-mode: standalone) { .hint { display: none; } }
 
+  /* ---------- REGISTRO RÁPIDO POR TAREA ---------- */
+  .metric-pill {
+    flex: 0 0 auto; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.01em;
+    color: var(--text-faint); background: none; border: none; border-radius: 8px;
+    padding: 5px 6px; cursor: pointer; min-width: 28px; text-align: right; line-height: 1;
+  }
+  .metric-pill.pos { color: var(--accent); }
+  .metric-pill.neg { color: var(--danger); }
+  .metric-pill.empty { color: var(--text-faint); opacity: 0.5; }
+  .metric-pill.has-note { text-decoration: underline dotted; text-underline-offset: 3px; }
+  body.editing .metric-pill { display: none; }
+
+  .unit-input { display: none; }
+  body.editing .unit-input {
+    display: block; flex: 0 0 auto; width: 48px;
+    font-family: var(--mono); font-size: 13px; text-align: center; text-transform: uppercase;
+    color: var(--accent); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 4px;
+  }
+  body.editing .unit-input:focus { outline: none; border-color: var(--accent); }
+  body.editing .unit-input::placeholder { color: var(--text-faint); }
+
+  /* ---------- HOJA INFERIOR (BOTTOM SHEET) ---------- */
+  .sheet-wrap { position: fixed; inset: 0; z-index: 50; display: none; }
+  .sheet-wrap.open { display: block; }
+  .sheet-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.55); }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; max-width: 480px; margin: 0 auto;
+    background: var(--surface); border-top-left-radius: 22px; border-top-right-radius: 22px;
+    border-top: 1px solid var(--line);
+    padding: 10px 20px calc(env(safe-area-inset-bottom) + 22px);
+    transform: translateY(100%); transition: transform .28s cubic-bezier(.22,1,.36,1);
+  }
+  .sheet-wrap.open .sheet { transform: translateY(0); }
+  .sheet-handle { width: 38px; height: 4px; border-radius: 99px; background: var(--text-faint); margin: 0 auto 16px; }
+  .sheet-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .sheet-sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin: 3px 0 18px; }
+  .num-row { display: none; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .num-row.show { display: flex; }
+  .sign-btn { width: 48px; height: 54px; border-radius: 12px; background: var(--surface-2);
+    border: 1px solid var(--line); color: var(--text); font-size: 24px; cursor: pointer; flex: 0 0 auto; }
+  .sign-btn.neg { color: var(--danger); border-color: var(--danger); }
+  .num-input { flex: 1; min-width: 0; font-family: var(--mono); font-size: 30px; font-weight: 600;
+    color: var(--text); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px;
+    padding: 8px 14px; text-align: right; font-feature-settings: "tnum"; }
+  .num-input:focus { outline: none; border-color: var(--accent); }
+  .unit-label { font-family: var(--mono); font-size: 18px; color: var(--text-dim); flex: 0 0 auto; min-width: 26px; }
+  .sheet-note { width: 100%; min-height: 84px; resize: vertical; font-family: var(--sans); font-size: 16px;
+    line-height: 1.5; color: var(--text); background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px; margin-bottom: 16px; }
+  .sheet-note:focus { outline: none; border-color: var(--accent); }
+  .sheet-note::placeholder { color: var(--text-faint); }
+  .sheet-actions { display: flex; gap: 10px; }
+  .sheet-save { flex: 1; font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--bg); background: var(--accent); border: none; border-radius: 11px; padding: 14px; cursor: pointer; }
+  .sheet-save:active { opacity: .85; }
+  .sheet-del { flex: 0 0 auto; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--danger); background: none; border: 1px solid var(--line); border-radius: 11px; padding: 14px 16px; cursor: pointer; }
+
+  /* ---------- MÉTRICAS POR TAREA (PROGRESO) ---------- */
+  .metric-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+  .metric-chip { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-dim);
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 11px; cursor: pointer;
+    max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .metric-chip.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+  .metric-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 6px 0; }
+  .metric-stat { text-align: center; }
+  .metric-stat .v { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--text); font-feature-settings: "tnum"; }
+  .metric-stat .v.pos { color: var(--accent); }
+  .metric-stat .v.neg { color: var(--danger); }
+  .metric-stat .k { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 4px; }
+  .tm-sub { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin: 18px 0 6px; }
+
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -403,6 +475,11 @@
       <div id="secbars"></div>
     </div>
 
+    <div class="card" id="taskMetricsCard">
+      <div class="card-head"><span class="card-title">Métrica por tarea</span><span class="card-sub">registros</span></div>
+      <div id="taskMetrics"></div>
+    </div>
+
     <div class="card">
       <div class="card-head"><span class="card-title">Respaldo</span><span class="card-sub">tu diario, a salvo</span></div>
       <div class="data-row">
@@ -430,6 +507,26 @@
     Progreso
   </button>
 </nav>
+
+<!-- ===================== HOJA DE REGISTRO ===================== -->
+<div class="sheet-wrap" id="sheetWrap">
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheetTitle">—</div>
+    <div class="sheet-sub" id="sheetSub">—</div>
+    <div class="num-row" id="numRow">
+      <button class="sign-btn" id="signBtn" type="button">+</button>
+      <input class="num-input" id="numInput" inputmode="decimal" placeholder="0">
+      <span class="unit-label" id="unitLabel"></span>
+    </div>
+    <textarea class="sheet-note" id="sheetNote" placeholder="Nota rápida (opcional)"></textarea>
+    <div class="sheet-actions">
+      <button class="sheet-save" id="sheetSave" type="button">Guardar</button>
+      <button class="sheet-del" id="sheetDel" type="button">Borrar</button>
+    </div>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -467,7 +564,8 @@
     hm5: "#E0A33E",
     line: "rgba(224,200,150,0.10)",
     accent: "#E0A33E",
-    faint: "#5E574B"
+    faint: "#5E574B",
+    danger: "#C56B5A"
   };
 
   /* ---------- modelo ---------- */
@@ -484,7 +582,7 @@
       { id: "s2", text: "Definir las 3 prioridades del día", sectionId: "x1" },
       { id: "s3", text: "Entrenar (fuerza o cardio)", sectionId: "x2" },
       { id: "s4", text: "Comida limpia", sectionId: "x2" },
-      { id: "s5", text: "Bloque de trading sin distracciones", sectionId: "x3" },
+      { id: "s5", text: "Bloque de trading sin distracciones", sectionId: "x3", unit: "$" },
       { id: "s6", text: "Deep work en el proyecto principal", sectionId: "x3" },
       { id: "s7", text: "30 min en Santi Malo", sectionId: "x4" },
       { id: "s8", text: "Grabar o anotar 1 idea musical", sectionId: "x4" },
@@ -516,6 +614,8 @@
     // asegurar que cada tarea tenga una sección válida
     var ids = d.sections.map(function (s) { return s.id; });
     d.tasks.forEach(function (t) { if (ids.indexOf(t.sectionId) === -1) t.sectionId = ids[0] || null; });
+    // v3: registros por tarea (valor/nota) por día
+    Object.keys(d.history).forEach(function (k) { if (!d.history[k].entries) d.history[k].entries = {}; });
     return d;
   }
 
@@ -537,12 +637,49 @@
   function recOf(key, create) {
     if (!data.history[key]) {
       if (!create) return null;
-      data.history[key] = { done: [], total: (key === todayKey() ? data.tasks.length : 0), note: "" };
+      data.history[key] = { done: [], total: (key === todayKey() ? data.tasks.length : 0), note: "", entries: {} };
     }
+    if (!data.history[key].entries) data.history[key].entries = {};
     return data.history[key];
   }
   function todayRec() { return recOf(todayKey(), true); }
   function isDoneToday(id) { var r = recOf(todayKey()); return !!r && r.done.indexOf(id) !== -1; }
+
+  /* ---- registros por tarea (valor numérico y/o nota) ---- */
+  function entryOf(key, taskId, create) {
+    var r = recOf(key, create); if (!r) return null;
+    if (!r.entries) r.entries = {};
+    if (!r.entries[taskId]) { if (!create) return null; r.entries[taskId] = {}; }
+    return r.entries[taskId];
+  }
+  function taskById(id) { return data.tasks.find(function (t) { return t.id === id; }); }
+  function formatVal(v, unit) {
+    if (v === null || v === undefined || isNaN(v)) return "";
+    var neg = v < 0, mag = Math.abs(v);
+    var s = (Math.round(mag * 100) / 100).toString();
+    return (neg ? "−" : "") + s + (unit ? (" " + unit) : "");
+  }
+  var NOTE_SVG = '<svg viewBox="0 0 20 20" width="15" height="15" style="vertical-align:middle">' +
+    '<path d="M4 4h9l3 3v9H4z" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
+    '<path d="M7 9.5h6M7 12.5h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  function updatePill(t, pill) {
+    var r = recOf(todayKey());
+    var e = (r && r.entries) ? r.entries[t.id] : null;
+    pill.className = "metric-pill";
+    if (t.unit) {
+      if (e && typeof e.value === "number" && !isNaN(e.value)) {
+        pill.textContent = formatVal(e.value, t.unit);
+        pill.classList.add(e.value < 0 ? "neg" : "pos");
+      } else {
+        pill.textContent = "＋";
+        pill.classList.add("empty");
+      }
+      if (e && e.note) pill.classList.add("has-note");
+    } else {
+      pill.innerHTML = NOTE_SVG;
+      pill.classList.add(e && e.note ? "pos" : "empty");
+    }
+  }
 
   function dayPct(key) {
     var r = data.history[key];
@@ -677,6 +814,26 @@
     });
     el.appendChild(input);
 
+    // unidad (modo edición): vacío = solo check; con texto (ej. $) = tarea numérica
+    var unitInput = document.createElement("input");
+    unitInput.className = "unit-input";
+    unitInput.value = t.unit || "";
+    unitInput.placeholder = "u";
+    unitInput.maxLength = 5;
+    unitInput.addEventListener("change", function () {
+      var u = unitInput.value.trim();
+      if (u) t.unit = u; else delete t.unit;
+      save(); renderList();
+    });
+    el.appendChild(unitInput);
+
+    // registro rápido del día (modo normal): valor numérico o nota
+    var pill = document.createElement("button");
+    pill.type = "button";
+    updatePill(t, pill);
+    pill.addEventListener("click", function (ev) { ev.stopPropagation(); openSheet(t.id); });
+    el.appendChild(pill);
+
     var ctrls = document.createElement("span");
     ctrls.className = "task-ctrls";
 
@@ -700,6 +857,7 @@
     el.addEventListener("click", function (ev) {
       if (editing) return;
       if (ev.target.closest(".task-ctrls")) return;
+      if (ev.target.closest(".metric-pill")) return;
       toggle(t.id, el);
     });
     return el;
@@ -896,6 +1054,7 @@
     renderHeatmap();
     renderTrend();
     renderSecBars();
+    renderTaskMetrics();
   }
 
   function avgPct(days) {
@@ -1028,6 +1187,176 @@
               '</div>';
     });
     cont.innerHTML = html || '<div class="empty">Agrega tareas a tus secciones.</div>';
+  }
+
+  /* ================= HOJA DE REGISTRO ================= */
+  var sheetTaskId = null, sheetSign = 1;
+
+  function openSheet(taskId) {
+    var t = taskById(taskId); if (!t) return;
+    sheetTaskId = taskId;
+    document.getElementById("sheetTitle").textContent = t.text;
+    var d = new Date();
+    document.getElementById("sheetSub").textContent = DIAS[d.getDay()] + " " + d.getDate() + " de " + MESES[d.getMonth()];
+    var numRow = document.getElementById("numRow");
+    var e = entryOf(todayKey(), taskId, false);
+    if (t.unit) {
+      numRow.classList.add("show");
+      document.getElementById("unitLabel").textContent = t.unit;
+      var v = (e && typeof e.value === "number") ? e.value : null;
+      setSign((v !== null && v < 0) ? -1 : 1);
+      document.getElementById("numInput").value = (v !== null) ? Math.abs(v) : "";
+    } else {
+      numRow.classList.remove("show");
+    }
+    document.getElementById("sheetNote").value = (e && e.note) ? e.note : "";
+    document.getElementById("sheetWrap").classList.add("open");
+  }
+  function closeSheet() { document.getElementById("sheetWrap").classList.remove("open"); sheetTaskId = null; }
+  function setSign(s) {
+    sheetSign = s;
+    var b = document.getElementById("signBtn");
+    b.textContent = s < 0 ? "−" : "+";
+    b.classList.toggle("neg", s < 0);
+  }
+  document.getElementById("signBtn").addEventListener("click", function () { setSign(sheetSign * -1); });
+  document.getElementById("sheetBackdrop").addEventListener("click", closeSheet);
+  document.getElementById("sheetSave").addEventListener("click", function () {
+    if (!sheetTaskId) return;
+    var t = taskById(sheetTaskId);
+    var note = document.getElementById("sheetNote").value.trim();
+    var hasValue = false, value = null;
+    if (t.unit) {
+      var raw = document.getElementById("numInput").value.trim().replace(",", ".");
+      if (raw !== "") { value = sheetSign * Math.abs(parseFloat(raw)); if (isNaN(value)) value = null; else hasValue = true; }
+    }
+    if (!hasValue && !note) {
+      var r0 = recOf(todayKey());
+      if (r0 && r0.entries) delete r0.entries[sheetTaskId];
+      save(); renderToday(); closeSheet(); return;
+    }
+    var e = entryOf(todayKey(), sheetTaskId, true);
+    if (hasValue) e.value = value; else delete e.value;
+    if (note) e.note = note; else delete e.note;
+    // registrar un valor numérico implica que la tarea se hizo -> marcar done
+    if (hasValue) {
+      var r = todayRec();
+      if (r.done.indexOf(sheetTaskId) === -1) { r.done.push(sheetTaskId); r.total = data.tasks.length; }
+    }
+    save(); renderToday(); closeSheet();
+  });
+  document.getElementById("sheetDel").addEventListener("click", function () {
+    if (!sheetTaskId) return;
+    var r = recOf(todayKey());
+    if (r && r.entries) delete r.entries[sheetTaskId];
+    save(); renderToday(); closeSheet();
+  });
+
+  /* ================= MÉTRICAS POR TAREA ================= */
+  var selectedMetricTask = null;
+
+  function numericTasks() { return data.tasks.filter(function (t) { return !!t.unit; }); }
+  function taskSeries(taskId) {
+    var arr = [];
+    Object.keys(data.history).forEach(function (k) {
+      var r = data.history[k]; if (!r.entries) return;
+      var e = r.entries[taskId];
+      if (e && typeof e.value === "number" && !isNaN(e.value)) arr.push({ key: k, value: e.value });
+    });
+    arr.sort(function (a, b) { return a.key < b.key ? -1 : a.key > b.key ? 1 : 0; });
+    return arr;
+  }
+
+  function renderTaskMetrics() {
+    var cont = document.getElementById("taskMetrics");
+    var nts = numericTasks();
+    if (!nts.length) {
+      cont.innerHTML = '<div class="empty">Marca una tarea con una unidad (ej. $)<br>en Editar para registrar valores y verlos aquí.</div>';
+      return;
+    }
+    if (!selectedMetricTask || !nts.some(function (t) { return t.id === selectedMetricTask; })) selectedMetricTask = nts[0].id;
+    var chips = nts.length > 1 ? ('<div class="metric-chips">' + nts.map(function (t) {
+      return '<button class="metric-chip ' + (t.id === selectedMetricTask ? 'active' : '') + '" data-mid="' + t.id + '">' + escapeHtml(t.text) + '</button>';
+    }).join("") + '</div>') : "";
+    var t = taskById(selectedMetricTask);
+    var series = taskSeries(selectedMetricTask);
+    cont.innerHTML = chips + metricBody(t, series);
+    cont.querySelectorAll(".metric-chip").forEach(function (b) {
+      b.addEventListener("click", function () { selectedMetricTask = b.dataset.mid; renderTaskMetrics(); });
+    });
+  }
+
+  function statCell(v, cls, k) {
+    var c = (cls === "pos" || cls === "neg") ? cls : "";
+    return '<div class="metric-stat"><div class="v ' + c + '">' + v + '</div><div class="k">' + k + '</div></div>';
+  }
+  function metricBody(t, series) {
+    if (!series.length) return '<div class="empty">Aún no registras valores en esta tarea.<br>Tócala en Hoy y agrega el dato.</div>';
+    var vals = series.map(function (s) { return s.value; });
+    var total = vals.reduce(function (a, b) { return a + b; }, 0);
+    var avg = total / vals.length;
+    var best = Math.max.apply(null, vals);
+    var worst = Math.min.apply(null, vals);
+    var posPct = Math.round(vals.filter(function (v) { return v > 0; }).length / vals.length * 100);
+    var u = t.unit;
+    var stats =
+      '<div class="metric-stats">' +
+        statCell(formatVal(total, u), total >= 0 ? "pos" : "neg", "Total") +
+        statCell(formatVal(Math.round(avg * 100) / 100, u), avg >= 0 ? "pos" : "neg", "Promedio") +
+        statCell(String(series.length), "", "Registros") +
+      '</div><div class="metric-stats">' +
+        statCell(formatVal(best, u), "pos", "Mejor") +
+        statCell(formatVal(worst, u), worst < 0 ? "neg" : "pos", "Peor") +
+        statCell(posPct + "%", "", "Días +") +
+      '</div>';
+    return stats +
+      '<div class="tm-sub">Acumulado</div>' + equityChart(series) +
+      '<div class="tm-sub">Por registro</div>' + barsChart(series);
+  }
+
+  function shortNum(v) { var a = Math.abs(v); if (a >= 1000) return (v / 1000).toFixed(1) + "k"; return (Math.round(v * 10) / 10).toString(); }
+  function chartScale(values, W, H, padL, padR, padT, padB) {
+    var all = values.concat([0]);
+    var min = Math.min.apply(null, all), max = Math.max.apply(null, all);
+    if (min === max) max = min + 1;
+    var iw = W - padL - padR, ih = H - padT - padB;
+    function X(i, n) { return padL + (n <= 1 ? iw / 2 : (i / (n - 1)) * iw); }
+    function Y(v) { return padT + (1 - (v - min) / (max - min)) * ih; }
+    return { X: X, Y: Y, min: min, max: max, zeroY: Y(0), iw: iw, ih: ih };
+  }
+  function equityChart(series) {
+    var cum = [], run = 0;
+    series.forEach(function (s) { run += s.value; cum.push(run); });
+    var W = 320, H = 130, padL = 36, padR = 8, padT = 12, padB = 14;
+    var sc = chartScale(cum, W, H, padL, padR, padT, padB), n = cum.length;
+    var pts = cum.map(function (v, i) { return [sc.X(i, n), sc.Y(v)]; });
+    var line = pts.map(function (p, i) { return (i === 0 ? "M" : "L") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+    var area = line + " L" + pts[n - 1][0].toFixed(1) + " " + sc.zeroY.toFixed(1) + " L" + pts[0][0].toFixed(1) + " " + sc.zeroY.toFixed(1) + " Z";
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+    svg += '<line x1="' + padL + '" y1="' + sc.zeroY.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + sc.zeroY.toFixed(1) + '" stroke="' + C.line + '" stroke-width="1"/>';
+    svg += '<text x="' + (padL - 6) + '" y="' + (sc.zeroY + 3).toFixed(1) + '" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="9" fill="' + C.faint + '">0</text>';
+    svg += '<text x="' + (padL - 6) + '" y="' + (sc.Y(sc.max) + 3).toFixed(1) + '" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="9" fill="' + C.faint + '">' + shortNum(sc.max) + '</text>';
+    svg += '<path d="' + area + '" fill="' + C.accent + '" opacity="0.10"/>';
+    svg += '<path d="' + line + '" fill="none" stroke="' + C.accent + '" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>';
+    svg += '<circle cx="' + pts[n - 1][0].toFixed(1) + '" cy="' + pts[n - 1][1].toFixed(1) + '" r="3.2" fill="' + C.accent + '"/>';
+    svg += '</svg>';
+    return svg;
+  }
+  function barsChart(series) {
+    var vals = series.map(function (s) { return s.value; });
+    var W = 320, H = 110, padL = 36, padR = 8, padT = 8, padB = 12;
+    var sc = chartScale(vals, W, H, padL, padR, padT, padB), n = vals.length;
+    var slot = sc.iw / Math.max(1, n);
+    var bw = Math.min(16, Math.max(3, slot * 0.6));
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+    svg += '<line x1="' + padL + '" y1="' + sc.zeroY.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + sc.zeroY.toFixed(1) + '" stroke="' + C.line + '" stroke-width="1"/>';
+    vals.forEach(function (v, i) {
+      var cx = sc.X(i, n), y0 = sc.zeroY, y1 = sc.Y(v);
+      var top = Math.min(y0, y1), h = Math.max(0.5, Math.abs(y1 - y0));
+      svg += '<rect x="' + (cx - bw / 2).toFixed(1) + '" y="' + top.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2" fill="' + (v < 0 ? C.danger : C.accent) + '"/>';
+    });
+    svg += '</svg>';
+    return svg;
   }
 
   /* ---------- respaldo export / import ---------- */
